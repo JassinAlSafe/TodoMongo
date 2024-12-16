@@ -113,6 +113,30 @@ app.put("/tasks/:task_id/complete", async (req, res) => {
   }
 });
 
+// GET /tasks/categories - Fetch all unique categories
+app.get("/tasks/categories", async (req, res) => {
+  try {
+    const categories = await Task.distinct("category");
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching categories." });
+  }
+});
+
+// GET /tasks/categories/:category_name - Fetch tasks by category
+app.get("/tasks/categories/:category_name", async (req, res) => {
+  try {
+    const tasks = await Task.find({ category: req.params.category_name });
+    if (tasks.length > 0) {
+      res.json(tasks);
+    } else {
+      res.status(404).json({ message: "No tasks found in this category." });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching tasks by category." });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
