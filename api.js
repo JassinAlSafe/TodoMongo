@@ -11,6 +11,7 @@ export const completeTask = (id) => API.put(`/tasks/${id}/complete`);
 export const deleteTask = (id) => API.delete(`/tasks/${id}`);
 
 export const fetchCategories = () => API.get("/tasks/categories");
-export const fetchTasksByCategory = (category) => API.get(`/tasks/categories/${category}`);
+export const fetchTasksByCategory = (category) =>
+  API.get(`/tasks/categories/${category}`);
 
 export default API;
