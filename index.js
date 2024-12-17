@@ -42,6 +42,27 @@ app.get("/tasks/categories", async (req, res) => {
   }
 });
 
+// New endpoint to get tasks by category
+app.get("/tasks/categories/:category_name", async (req, res) => {
+  try {
+    const categoryName = req.params.category_name;
+    const tasks = await Task.find({ category: categoryName });
+    
+    if (tasks.length === 0) {
+      return res.status(404).json({ 
+        message: `No tasks found in category: ${categoryName}` 
+      });
+    }
+    
+    res.json(tasks);
+  } catch (err) {
+    console.error("Error fetching tasks by category:", err);
+    res.status(500).json({ 
+      message: "Error fetching tasks for the specified category." 
+    });
+  }
+});
+
 // GET /tasks - Fetch all tasks
 app.get("/tasks", async (req, res) => {
   try {

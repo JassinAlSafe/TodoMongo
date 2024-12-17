@@ -94,5 +94,49 @@ function editTask(id, description, category) {
   editingTaskId = id; // Set the task ID for editing
 }
 
+// Fetch tasks by category
+async function fetchTasksByCategory(category) {
+  try {
+    const response = await fetch(`${API_BASE}/tasks/categories/${category}`);
+    const tasks = await response.json();
+    renderTasks(tasks);
+  } catch (error) {
+    console.error("Error fetching tasks by category:", error);
+  }
+}
+
+// Fetch and populate category dropdown
+async function fetchCategories() {
+  try {
+    const response = await fetch(`${API_BASE}/tasks/categories`);
+    const categories = await response.json();
+    const categorySelect = document.getElementById("category-filter");
+    
+    // Clear existing options
+    categorySelect.innerHTML = '<option value="">All Categories</option>';
+    
+    // Add categories to dropdown
+    categories.forEach(category => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      categorySelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+  }
+}
+
 // Initial fetch
 fetchTasks();
+fetchCategories();
+
+// Add event listener for category filter
+document.getElementById("category-filter").addEventListener("change", (e) => {
+  const selectedCategory = e.target.value;
+  if (selectedCategory) {
+    fetchTasksByCategory(selectedCategory);
+  } else {
+    fetchTasks(); // Show all tasks when no category is selected
+  }
+});
